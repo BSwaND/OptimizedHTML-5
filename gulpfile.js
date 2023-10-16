@@ -1,5 +1,5 @@
 let preprocessor = 'sass', // Preprocessor (sass, less, styl); 'sass' also work with the Scss syntax in blocks/ folder.
-		fileswatch   = 'html,htm,txt,json,md,woff2' // List of files extensions for watching & hard reload
+	fileswatch   = 'html,htm,txt,json,md,woff2' // List of files extensions for watching & hard reload
 
 import pkg from 'gulp'
 const { gulp, src, dest, parallel, series, watch } = pkg
@@ -25,6 +25,11 @@ import imagemin      from 'gulp-imagemin'
 import changed       from 'gulp-changed'
 import concat        from 'gulp-concat'
 import rsync         from 'gulp-rsync'
+import ftpDeploy 	 from 'ftp-deploy'
+import ftp 			 from 'vinyl-ftp'
+import rename 		 from 'gulp-rename'
+import replace 		 from 'gulp-replace'
+
 import {deleteAsync} from 'del'
 
 function browsersync() {
@@ -34,19 +39,24 @@ function browsersync() {
 			middleware: bssi({ baseDir: 'app/', ext: '.html' })
 		},
 		ghostMode: { clicks: false },
-		notify: false,
+		notify: true,
 		online: true,
 		// tunnel: 'yousutename', // Attempt to use the URL https://yousutename.loca.lt
 	})
 }
 
 function scripts() {
-	return src(['app/js/*.js', '!app/js/*.min.js'])
+	return src([
+		'app/js/*.js',
+		'!app/js/*.min.js'
+	])
 		.pipe(webpackStream({
 			mode: 'production',
+			//mode: 'development',
 			performance: { hints: false },
 			plugins: [
 				new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery', 'window.jQuery': 'jquery' }), // jQuery (npm i jquery)
+				// new webpack.ProvidePlugin({ 'window.Swiper': 'Swiper' }), // jQuery (npm i jquery)
 			],
 			module: {
 				rules: [
@@ -64,7 +74,7 @@ function scripts() {
 				]
 			},
 			optimization: {
-				minimize: true,
+				minimize: false,
 				minimizer: [
 					new TerserPlugin({
 						terserOptions: { format: { comments: false } },
@@ -72,7 +82,7 @@ function scripts() {
 					})
 				]
 			},
-		}, webpack)).on('error', (err) => {
+		}, webpack)).on('error', function (err)  {
 			this.emit('end')
 		})
 		.pipe(concat('app.min.js'))
@@ -104,12 +114,25 @@ function images() {
 function buildcopy() {
 	return src([
 		'{app/js,app/css}/*.min.*',
-		'app/images/**/*.*',
+		//'app/images/favicon.ico',
 		'!app/images/src/**/*',
 		'app/fonts/**/*'
 	], { base: 'app/' })
-	.pipe(dest('dist'))
+		.pipe(dest('dist'))
 }
+function moveFiles() {
+	return src([
+		'app/images/dist/*',
+		'app/images/dist/*/*.*',
+	])
+		.pipe(dest('dist/images/'));
+}
+function replacePathImg() {
+	return src('dist/css/*.*')
+		.pipe(replace('/images/dist/', '/images/'))
+		.pipe(dest('dist/css')) // Замените путь на папку, куда нужно сохранить измененный CSS
+}
+
 
 async function buildhtml() {
 	let includes = new ssi('app/', 'dist/', '/**/*.html')
@@ -144,8 +167,30 @@ function startwatch() {
 	watch(`app/**/*.{${fileswatch}}`, { usePolling: true }).on('change', browserSync.reload)
 }
 
+
+// Задача для загрузки файлов на FTP-сервер
+function deployFtp() {
+	const globs = [
+		'dist/**', // Путь к локальным файлам для загрузки
+	];
+
+	// Конфигурация для подключения к FTP-серверу
+	const conn = ftp.create({
+		host:     '***',
+		user:     '***',
+		password: '****',
+	});
+
+	// Используйте base: './' для сохранения структуры папок
+	return src(globs, { base: 'dist/', buffer: true })
+		.pipe(conn.newer('/')) // Проверка измененных файлов на сервере
+		.pipe(conn.dest('/')); // Загрузка файлов на сервер
+};
+
+
 export { scripts, styles, images, deploy }
 export let assets = series(scripts, styles, images)
-export let build = series(cleandist, images, scripts, styles, buildcopy, buildhtml)
+export let build = series(cleandist, images, scripts, styles, buildcopy, moveFiles, replacePathImg, buildhtml)
+export let dd = series(build, deployFtp)
 
 export default series(scripts, styles, images, parallel(browsersync, startwatch))

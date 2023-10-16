@@ -1,0 +1,32 @@
+.menu
+  margin: 0
+  padding: 0
+  a
+    text-decoration: none
+    color: $textcolor
+  &-main
+    display: flex
+    //justify-content: space-evenly
+    align-items: center
+    &_item
+      list-style-type: none
+      padding: 0 10px
+      margin-inline-end: 20px
+      font-size: 18px
+      font-weight: 500
+      a
+        position: relative
+        &:after
+          position: absolute
+          width: 0px
+          height: 3px
+          background: $accent
+          left: 0
+          bottom: 0px
+          z-index: 10
+          content: ''
+          transition: all .4s ease-in-out
+        &:hover:after
+          right: 0
+          width: 90%
+

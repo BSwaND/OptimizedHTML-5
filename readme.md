@@ -1,20 +1,18 @@
-<h1>OptimizedHTML 5</h1>
+<h1>OptimizedHTML-MY</h1>
 <p>Lightweight production-ready Gulp starter.</p>
 
 <p>
 	<img src="https://raw.githubusercontent.com/agragregra/oh5/master/app/images/src/preview.jpg" alt="Start HTML Template">
 </p>
 
-<p><strong>OptimizedHTML 5</strong> - lightweight startup environment with <strong>Gulp 4</strong>, <strong>Preprocessors (Sass, Scss, Less, Stylus)</strong>, <strong>cssnano</strong>, <strong>Browsersync</strong>, <strong>PostCSS</strong>, <strong>Autoprefixer</strong>, <strong>webpack-stream</strong>, <strong>Babel</strong>, <strong>Rsync</strong>, <strong>CSS Reboot</strong> (Bootstrap reboot), Server-side <strong>HTML imports</strong> (SSI), <strong>build</strong>, <strong>gulp-imagemin</strong>. It uses best practices of images compression, JavaScript, CSS optimizing and contains a <strong>.htaccess</strong> code for resources caching (images, fonts, HTML, CSS, JS and other content types).</p>
+<p><strong>OptimizedHTML-MY</strong> - lightweight startup environment with <strong>Gulp 4</strong>, <strong>Preprocessors (Sass, Scss, Less, Stylus)</strong>, <strong>cssnano</strong>, <strong>Browsersync</strong>, <strong>PostCSS</strong>, <strong>Autoprefixer</strong>, <strong>webpack-stream</strong>, <strong>Babel</strong>, <strong>Rsync</strong>, <strong>CSS Reboot</strong> (Bootstrap reboot), Server-side <strong>HTML imports</strong> (SSI), <strong>build</strong>, <strong>gulp-imagemin</strong>. It uses best practices of images compression, JavaScript, CSS optimizing and contains a <strong>.htaccess</strong> code for resources caching (images, fonts, HTML, CSS, JS and other content types).</p>
 
-<h2>How to use OptimizedHTML 5</h2>
+<h2>How to use OptimizedHTML-MY</h2>
 
 <p>Clone into the current folder and remove all unnecessary (one command):</p>
 
-<pre>git clone https://github.com/agragregra/oh5 .; rm -rf trunk .gitignore readme.md .git dist .editorconfig</pre>
-
 <ol>
-	<li>Clone or <a href="https://github.com/agragregra/OptimizedHTML-5/archive/master.zip">Download</a> <strong>OptimizedHTML 5</strong> from GitHub</li>
+	<li>Clone or <a href="https://github.com/agragregra/OptimizedHTML-5/archive/master.zip">Download</a> <strong>OptimizedHTML-MY</strong> from GitHub</li>
 	<li>Install Node Modules: <strong>npm i</strong></li>
 	<li>Run: <strong>gulp</strong></li>
 </ol>
@@ -57,7 +55,7 @@
 <p>Variables? No problem:</p>
 
 <pre>
-&lt;!--#set var="title" value="OptimizedHTML 5" --&gt;
+&lt;!--#set var="title" value="OptimizedHTML-MY" --&gt;
 &lt;!--#include virtual="/parts/header.html" --&gt;
 </pre>
 

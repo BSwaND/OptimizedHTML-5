@@ -1,0 +1,57 @@
+.footer
+  //padding-top: 15px
+  color: #fff
+  &_main
+    background: linear-gradient(90deg,#1D0432,#1D0432 100.02%)
+    min-height: 500px
+    padding: 15px 0
+  &_logo
+    img
+      height: 100px
+  &_sub
+    background: #1D0432
+    min-height: 70px
+    display: flex
+    align-items: center
+    &__info-link
+      display: flex
+      a
+        display: block
+        margin-inline-end: 15px
+        color: #636363
+
+  &_heading
+    font-size: 20px
+    font-weight: 600
+    border-bottom: 1px solid #1D0432
+    margin-bottom: 15px
+  &_description
+    font-size: 12px
+    color: #ccc
+    margin: 15px 0 30px
+
+  &_contact
+    &_item
+      display: flex
+      flex-direction: column
+      justify-content: end
+      align-items: end
+      margin-bottom: 30px
+
+  .menu
+    border-bottom: 1px solid #ccc
+    margin-bottom: 20px
+    display: inline-block
+    min-width: 200px
+
+    a
+      color: #fff
+      font-weight: 500
+
+  .social_block
+    img
+      fill: #fff
+      filter: brightness(0) invert(1) opacity(0.5)
+      transition: all 0.4s
+      &:hover
+        filter: brightness(0) invert(1) opacity(0.8)
