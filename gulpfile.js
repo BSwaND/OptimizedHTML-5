@@ -133,6 +133,14 @@ function replacePathImg() {
 		.pipe(dest('dist/css')) // Замените путь на папку, куда нужно сохранить измененный CSS
 }
 
+function replacePathImgForHtml() {
+	return src([
+		'dist/*.html'
+	])
+		.pipe(replace('/images/dist/', '/images/'))
+		.pipe(replace('/images/src/', '/images/'))
+		.pipe(dest('dist/')) // !!!!!Замените путь на папку, куда нужно сохранить измененный
+}
 
 async function buildhtml() {
 	let includes = new ssi('app/', 'dist/', '/**/*.html')
@@ -190,7 +198,7 @@ function deployFtp() {
 
 export { scripts, styles, images, deploy }
 export let assets = series(scripts, styles, images)
-export let build = series(cleandist, images, scripts, styles, buildcopy, moveFiles, replacePathImg, buildhtml)
+export let build = series(cleandist, images, scripts, styles, buildcopy, moveFiles, replacePathImg, buildhtml, replacePathImgForHtml)
 export let dd = series(build, deployFtp)
 
 export default series(scripts, styles, images, parallel(browsersync, startwatch))
