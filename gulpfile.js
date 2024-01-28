@@ -144,7 +144,6 @@ function replacePathImgForHtml() {
 		.pipe(dest('dist/')) // !!!!!Замените путь на папку, куда нужно сохранить измененный
 }
 
-
 async function buildhtml() {
 	let includes = new ssi('app/', 'dist/', '/**/*.html')
 	includes.compile()
