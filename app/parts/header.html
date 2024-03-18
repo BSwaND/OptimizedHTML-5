@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 
-<head  lang="uk">
+<head  lang="uk" prefix="og: https://ogp.me/ns#">
 
 	<meta charset="utf-8">
 	<!-- <base href="/"> -->
 
 	<title><!--#echo var="title" --></title>
 	<meta name="description" content="Startup HTML template OptimizedHTML 5">
-
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+	<link rel="canonical" href='<!--#echo var="canonical" -->'/>
 	<link rel="icon" href="images/favicon.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="/images/dist/favicon/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/images/dist/favicon/favicon-32x32.png">
@@ -20,6 +19,12 @@
 	<meta name="msapplication-TileColor" content="#7a4593">
 	<meta name="theme-color" content="#7a4593">
 	<meta property="og:image" content="images/dist/preview.jpg">
+
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content='<!--#echo var="title" -->' />
+	<meta property="og:description" content='<!--#echo var="description" -->' />
+	<meta property="og:url" content='<!--#echo var="canonical" -->' />
+	<meta property="og:image" content="***" />
 	
 	<link rel="stylesheet" href="css/app.min.css">
 
