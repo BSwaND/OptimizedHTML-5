@@ -30,6 +30,9 @@ import ftp 			 from 'vinyl-ftp'
 import rename 		 from 'gulp-rename'
 import replace 		 from 'gulp-replace'
 
+import plumber 		 from 'gulp-plumber'
+import notify 		 from 'gulp-notify'
+
 import {deleteAsync} from 'del'
 
 function browsersync() {
@@ -50,6 +53,12 @@ function scripts() {
 		'app/js/*.js',
 		'!app/js/*.min.js'
 	])
+		.pipe(plumber(
+			notify.onError({
+				title: "JS",
+				message: "Error: <%= error.message %>"
+			})
+		))
 		.pipe(webpackStream({
 			mode: 'production',
 			//mode: 'development',
