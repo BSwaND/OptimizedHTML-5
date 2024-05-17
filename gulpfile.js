@@ -29,7 +29,11 @@ import ftpDeploy 	 from 'ftp-deploy'
 import ftp 			 from 'vinyl-ftp'
 import rename 		 from 'gulp-rename'
 import replace 		 from 'gulp-replace'
-
+import svgmin 		 from 'gulp-svgmin'
+import cheerio 		 from 'gulp-cheerio'
+import svgSprite     from 'gulp-svg-sprite'
+import webp 		 from 'gulp-webp'
+import avif 		 from 'gulp-avif'
 import plumber 		 from 'gulp-plumber'
 import notify 		 from 'gulp-notify'
 
@@ -113,11 +117,62 @@ function styles() {
 }
 
 function images() {
-	return src(['app/images/src/**/*'])
+	return src([
+		'app/images/src/**/*',
+		'!app/images/src/**/*.svg',
+		'!app/images/src/svg',
+		'app/images/src/sprite.svg'
+	])
 		.pipe(changed('app/images/dist'))
 		.pipe(imagemin())
 		.pipe(dest('app/images/dist'))
 		.pipe(browserSync.stream())
+}
+function svgSprites() {
+	return src('app/images/src/svg/**/*')
+		.pipe(svgmin({
+				js2svg: {
+					pretty: true,
+				},
+			})
+		)
+		.pipe(cheerio({
+				run: function ($) {
+					$('[fill]').removeAttr('fill');
+					$('[stroke]').removeAttr('stroke');
+					$('[style]').removeAttr('style');
+				},
+				parserOptions: {
+					xmlMode: true
+				},
+			})
+		)
+		.pipe(replace('&gt;', '>'))
+		.pipe(svgSprite({
+			mode: {
+				stack: {
+					sprite: "../sprite.svg"
+				}
+			},
+		}))
+		.pipe(dest('app/images/src'));
+}
+function webpImages() {
+	return src([
+		'app/images/src/**/**.{jpg,jpeg,png}',
+		'!app/images/src/favicon.png'
+	])
+		.pipe(webp())
+		.pipe(dest('app/images/src'))
+}
+
+function avifImages() {
+	return src([
+		'app/images/src/**/**.{jpg,jpeg,png}',
+		'!app/images/src/favicon.png'
+	])
+		.pipe(avif())
+		.pipe(dest('app/images/src'))
 }
 
 function buildcopy() {
@@ -148,8 +203,8 @@ function replacePathImgForHtml() {
 	return src([
 		'dist/*.html'
 	])
-		.pipe(replace('/images/dist/', '/images/'))
-		.pipe(replace('/images/src/', '/images/'))
+		.pipe(replace('images/dist/', 'images/'))
+		.pipe(replace('images/src/', 'images/'))
 		.pipe(dest('dist/')) // !!!!!Замените путь на папку, куда нужно сохранить измененный
 }
 
@@ -204,12 +259,13 @@ function deployFtp() {
 	return src(globs, { base: 'dist/', buffer: true })
 		.pipe(conn.newer('/')) // Проверка измененных файлов на сервере
 		.pipe(conn.dest('/')); // Загрузка файлов на сервер
-};
+}
 
 
-export { scripts, styles, images, deploy }
-export let assets = series(scripts, styles, images)
-export let build = series(cleandist, images, scripts, styles, buildcopy, moveFiles, replacePathImg, buildhtml, replacePathImgForHtml)
+export { scripts, styles, svgSprites, images, deploy }
+export let assets = series(scripts, styles, svgSprites, images, webpImages)
+export let webpAvifImages = series(webpImages, avifImages)
+export let build = series(cleandist, svgSprites, images, scripts, styles, buildcopy, moveFiles, replacePathImg, buildhtml, replacePathImgForHtml)
 export let dd = series(build, deployFtp)
 
-export default series(scripts, styles, images, parallel(browsersync, startwatch))
+export default series(scripts, styles, svgSprites, images, parallel(browsersync, startwatch))
